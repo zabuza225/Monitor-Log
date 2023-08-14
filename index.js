@@ -1,6 +1,16 @@
 const fs = require('fs');
+const mysql = require('mysql');
 
 const filePath = 'dev.log';
+
+// Configuration de la connexion à la base de données MySQL
+const connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: '',
+    database: 'logfile',
+  });
+
 // Vérifier si le fichier existe
 fs.access(filePath, fs.constants.F_OK, (err) => {
     if (err) {
@@ -25,16 +35,23 @@ fs.access(filePath, fs.constants.F_OK, (err) => {
         const match = regex.exec(line);
         
         if (match) {
-        const date = match[1];
-        const typeAlerte = match[2];
-        const message = match[3];
-        
-        // Faire ce que vous souhaitez avec les données extraites
-        // Par exemple, les enregistrer dans une base de données ou les afficher
-        console.log('Date :', date);
-        console.log('Type d\'alerte :', typeAlerte);
-        console.log('Message :', message);
-        console.log('------------------------');
+          const date = match[1];
+          const typeAlerte = match[2];
+          const message = match[3];
+
+          // Enregistrer les données dans la base de données
+          const query = 'INSERT INTO logs (date, type_alerte, message) VALUES (?, ?, ?)';
+          const values = [date, typeAlerte, message];
+          
+          connection.query(query, values, (err, result) => {
+            if (err) {
+              console.error(err);
+              return;
+            }
+
+            console.log('Données enregistrées avec succès dans la base de données.');
+          });
+
         }
     });
     });
