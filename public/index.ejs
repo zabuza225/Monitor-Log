@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Tableau des données</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
+</head>
+<body>
+  <table id="data-table" class="min-w-full">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Type d'alerte</th>
+        <th>Message</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Les données de la base de données seront ajoutées ici dynamiquement -->
+    </tbody>
+  </table>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tippy.js@6.3.4/dist/tippy-bundle.umd.min.js"></script>
+
+  <script>
+    $(document).ready(function() {
+        $.ajax({
+            url: 'url_de_votre_serveur',
+            dataType: 'json',
+            success: function(data) {
+            // Parcourir les données et les ajouter au tableau
+            data.forEach(function(row) {
+                $('#data-table tbody').append('<tr><td>' + row.date + '</td><td>' + row.type_alerte + '</td><td>' + row.message + '</td></tr>');
+            });
+
+            // Initialiser DataTables sur le tableau
+            $('#data-table').DataTable();
+            }
+        });
+    });
+  </script>
+</body>
+</html>
